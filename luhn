@@ -1,0 +1,29 @@
+#!/bin/bash
+
+[ $# -eq 1 ] || { echo "Usage: luhn <number>"; exit 1; }
+
+digits=$(echo $1 | sed 's/\(.\)/\1 /g')
+
+# reverse
+for i in $digits
+do
+    rev="$i $rev"
+done
+
+# double every even number
+even=false
+for i in $rev
+do
+    if [ $even == true ]
+    then
+        even=false
+        i=$(( i * 2 ))
+        i=$(( i / 10 + i % 10 ))
+    else
+        even=true
+    fi
+    sum=$(( sum + i ))
+done
+
+[[ $sum =~ 0$ ]] || { echo ":(" 1>&2; exit 2; }
+
